@@ -9,9 +9,12 @@
 
 #include <iostream>
 #include <random>
+
 using namespace std;
+
+
 const int RIGHE = 10;
-const int COLONNE = 5;
+const int COLONNE = 5; 
 
 void inizializzaRandom(int mat[][COLONNE])
 {
