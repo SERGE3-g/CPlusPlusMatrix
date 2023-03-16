@@ -2,10 +2,6 @@
 // Created by guea on 10/03/23.
 //
 
-/*
- *
- */
-
 #include <iostream>
  
 using namespace std;
