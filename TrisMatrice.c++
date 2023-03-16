@@ -9,20 +9,20 @@ int mossaPensata(char *tab)
 
     int risultato = -1;
     int combinazioni[8][3] = {
-        {0, 1, 2},
-        {3, 4, 5},
-        {6, 7, 8},
-        {0, 3, 6},
-        {1, 4, 7},
-        {2, 5, 8},
-        {0, 4, 8},
-        {2, 4, 6}};
+            {0, 1, 2},
+            {3, 4, 5},
+            {6, 7, 8},
+            {0, 3, 6},
+            {1, 4, 7},
+            {2, 5, 8},
+            {0, 4, 8},
+            {2, 4, 6}};
 
     // prima controllo se il giocatore può vincere
     // se il giocatore può vincere io lo blocco
     // XXO
 
-    for (int i = 0; i < 8; i++) // due X su 0 e 1 
+    for (int i = 0; i < 8; i++) // due X su 0 e 1
     {
 
         char a = tab[combinazioni[i][0]];
@@ -37,7 +37,7 @@ int mossaPensata(char *tab)
         }
     }
 
-    for (int i = 0; i < 8; i++) // due X su 0 e 2 
+    for (int i = 0; i < 8; i++) // due X su 0 e 2
     {
         char a = tab[combinazioni[i][0]];
         char b = tab[combinazioni[i][2]];
@@ -69,7 +69,55 @@ int mossaPensata(char *tab)
     // ora controllo se il computer può vincere
     // se ci sono due O metto il terzo
 
-    for (int i = 0; i < 8; i++) // due X su 0 e 1 
+    // inizio controllo della vittoria del computer
+    char computer = 'O'; // qui ho cambiato
+    char giocatore = 'X';
+    for (int i = 0; i < 8; i++) // due O su 0 e 1
+    {
+        char a = tab[combinazioni[i][0]];
+        char b = tab[combinazioni[i][1]];
+        char c = tab[combinazioni[i][2]];
+
+        bool condizione = a == b && c == VUOTO && a == computer;
+
+        if (condizione)
+        {
+            risultato = combinazioni[i][2];
+        }
+    }
+
+    for (int i = 0; i < 8; i++) // due O su 0 e 2
+    {
+        char a = tab[combinazioni[i][0]];
+        char b = tab[combinazioni[i][2]];
+        char c = tab[combinazioni[i][1]];
+
+        bool condizione = a == b && c == VUOTO && a == computer;
+
+        if (condizione)
+        {
+            risultato = combinazioni[i][1];
+        }
+    }
+
+    for (int i = 0; i < 8; i++) // due O su 1 e 2
+    {
+
+        char a = tab[combinazioni[i][1]];
+        char b = tab[combinazioni[i][2]];
+        char c = tab[combinazioni[i][0]];
+
+        bool condizione = a == b && c == VUOTO && a == computer;
+
+        if (condizione)
+        {
+            risultato = combinazioni[i][0];
+        }
+    }
+
+
+
+    for (int i = 0; i < 8; i++) // due X su 0 e 1
     {
 
         char a = tab[combinazioni[i][0]];
@@ -84,7 +132,7 @@ int mossaPensata(char *tab)
         }
     }
 
-    for (int i = 0; i < 8; i++) // due X su 0 e 2 
+    for (int i = 0; i < 8; i++) // due X su 0 e 2
     {
         char a = tab[combinazioni[i][0]];
         char b = tab[combinazioni[i][2]];
@@ -112,7 +160,7 @@ int mossaPensata(char *tab)
             risultato = combinazioni[i][0];
         }
     }
-
+ // fine controllo vittoria
 
 
     if(risultato == -1)
@@ -133,14 +181,14 @@ isWinner restituisce:
 int isWinner(char *arr)
 {
     int combinazioni[8][3] = {
-        {0, 1, 2},
-        {3, 4, 5},
-        {6, 7, 8},
-        {0, 3, 6},
-        {1, 4, 7},
-        {2, 5, 8},
-        {0, 4, 8},
-        {2, 4, 6}
+            {0, 1, 2},
+            {3, 4, 5},
+            {6, 7, 8},
+            {0, 3, 6},
+            {1, 4, 7},
+            {2, 5, 8},
+            {0, 4, 8},
+            {2, 4, 6}
     };
 
     for (int i = 0; i < 8; i++)
@@ -196,8 +244,41 @@ int main()
     bool xIsNext = true; // gestisce il turno
     while (true)         // i turni del gioco
     {
-
+ //   inizio di controlo se il computer ha vinto
         int mossa;
+        char computer = xIsNext ? 'O' : 'X'; // se è il turno di X allora il computer gioca con O
+        char giocatore = xIsNext ? 'X' : 'O'; // se è il turno di X allora il giocatore gioca con X
+
+        for (int i = 0; i < 9; i++)
+        {
+            if (tabella[i] == VUOTO)
+            {
+                tabella[i] = computer;
+                if (isWinner(tabella) == 1)
+                {
+                    cout << "HAI PERSO" << endl;
+                    return 0;
+                }
+                tabella[i] = VUOTO;
+            }
+            for (int j = 0; j < 9; j++)
+            {
+                if (tabella[j] == VUOTO)
+                {
+                    tabella[j] = giocatore;
+                    if (isWinner(tabella) == 1)
+                    {
+                        tabella[j] = computer;
+                        stampa(tabella);
+                        cout << "HAI PERSO" << endl;
+                        return 0;
+                    }
+                    tabella[j] = VUOTO;
+                }
+            }
+        }
+    // fine controllo se il computer ha vinto
+
 
         if (!xIsNext) // COMPUTER
         {
