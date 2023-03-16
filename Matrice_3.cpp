@@ -6,96 +6,69 @@
  *
  */
 
-
 #include <iostream>
-#include <random>
-
+ 
 using namespace std;
-
-
-const int RIGHE = 10;
-const int COLONNE = 5; 
-
-void inizializzaRandom(int mat[][COLONNE])
-{
-    for (int i = 0; i < RIGHE; i++)
-    {
-        for (int j = 0; j < COLONNE; j++)
-        {
-            mat[i][j] = rand() % 10;
+ 
+// 5 1 2 3 4
+// 5 1 5 1 3
+// 5 1 5 1 5
+// 5 1 5 1 5
+ 
+// 5 1 2 3 4 | 25
+// 5 1 5 1 3 | 25
+// ....
+// -----------
+// 13 15 15 77
+ 
+ 
+ 
+int main(){
+ 
+    int righe=5;
+    int colonne=5;
+    int matrice[righe][colonne];
+    for(int i=0; i<righe; i++){
+        for(int j=0; j<colonne; j++){
+            matrice[i][j]= random()%10; 
+            // matrice[i][j]=1;
         }
     }
-}
-
-void stampaTrattini()
-{
-    cout << "   ";
-    for (int i = 0; i < COLONNE; i++)
-    {
-        cout << "  " << i << " ";
+ 
+    //------
+ 
+    int sommaRighe[righe];
+    int sommaColonne[colonne];
+ 
+    for(int i=0;i<colonne;i++){
+        sommaColonne[i]=0;
+        sommaRighe[i]=0;
     }
-    cout << endl;
-    int trattini = COLONNE * 4 + 4;
-    for (int i = 0; i < trattini; i++)
-    {
-        cout << "-";
-    }
-    cout << endl;
-}
-
-void stampaMatrice(int mat[][COLONNE])
-{
-    stampaTrattini();
-    for (int i = 0; i < RIGHE; i++)
-    {
-        cout << i << "| ";
-
-        for (int j = 0; j < COLONNE; j++)
-        {
-            cout << "  " << mat[i][j] << " ";
+ 
+    for(int i=0; i<righe; i++){
+        for(int j=0; j<colonne; j++){
+ 
+            sommaRighe[i]+=matrice[i][j];
+            sommaColonne[j]+=matrice[i][j];
         }
-        cout << endl;
+ 
     }
-}
-
-void stampaSomme(int mat[][COLONNE])
-{
-    stampaTrattini();
-    for (int i = 0; i < RIGHE; i++)
-    {
-        int somme = 0;
-        cout << i << "| ";
-        for (int j = 0; j < COLONNE; j++)
-        {
-            somme += mat[i][j];
-            cout << "  " << mat[i][j] << " ";
+ 
+ 
+    for(int i=0; i<righe; i++){
+        for(int j=0; j<colonne; j++){
+            cout << " " << matrice[i][j] << " " ;
         }
-        cout << " |  " << somme;
-        cout << endl;
+        cout << "| " << sommaRighe[i] << endl;
     }
-    int trattini = COLONNE * 4 + 4;
-    for (int i = 0; i < trattini; i++)
-    {
-        cout << "-";
-    }
-    cout << endl;
-    cout << "    ";
-    for (int j = 0; j < COLONNE; j++)
-    {
-        int somme = 0;
-        for (int i = 0; i< RIGHE; i++)
-        {
-            somme+= mat[i][j];
+    cout << "----------------" << endl;
+    for(int i=0; i<colonne;i++){
+        if(sommaColonne[i]<10){
+            cout << " " << sommaColonne[i] << " ";
         }
-        cout << somme << "  ";
+        else{
+            cout << " " << sommaColonne[i];
+        }
     }
-}
-
-int main()
-{
-    int matrice[RIGHE][COLONNE];
-    inizializzaRandom(matrice);
-    stampaMatrice(matrice);
-    cout << "\n\n";
-    stampaSomme(matrice);
+ 
 }
