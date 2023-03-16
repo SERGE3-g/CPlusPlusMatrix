@@ -2,47 +2,64 @@
 
 using namespace std;
 
-
-int isWinner(char *arr) // faccio la funzione per controllare se x ha vinto
+int mossaPensata(char *tab)
 {
-    for (int i = 0; i < 3; i++) // 3 is the number of players
-    {
-        int j = i * 3;
-        if (arr[j] != ' ' && arr[j] == arr[j+1] && arr[j] == arr[j+2])
-        {
-            return (arr[j] == 'X') ? 1 : 2;
-        }
-    }
-    // faccio girare le colonne 
-    for (int j = 0; j < 3; j++)
-    {
-        if (arr[j] != ' ' && arr[j] == arr[j+3] && arr[j] == arr[j+6])
-        {
-            return (arr[j] == 'X') ? 1 : 2;
-        }
-    }
-    
-    if (arr[0] != ' ' && arr[0] == arr[4] && arr[0] == arr[8]) // diagonali 
-    {
-        return (arr[0] == 'X') ? 1 : 2;
-    }if (arr[2] != ' ' && arr[2] == arr[4] && arr[2] == arr[6])
-    {
-        return (arr[2] == 'X') ? 1 : 2;
-    }
-    
-    return 0;
+    return -1;
 }
 
-void stampa(char *a) // stampo 
+// 1 per la vittoria
+// 0 per continuare la partita
+// -1 per il pareggio
+int isWinner(char *arr)
+{
+    char vuoto = '_';
+
+    int combinazioni[8][3] = {
+            {0, 1, 2},
+            {3, 4, 5},
+            {6, 7, 8},
+            {0, 3, 6},
+            {1, 4, 7},
+            {2, 5, 8},
+            {0, 4, 8},
+            {2, 4, 6}
+    };
+
+    for (int i = 0; i < 8; i++)
+    {
+        int a = arr[combinazioni[i][0]];
+        int b = arr[combinazioni[i][1]];
+        int c = arr[combinazioni[i][2]];
+        if (a != vuoto && a == b && b == c)
+        {
+            return 1;
+        }
+    }
+
+    for (int i = 0; i < 9; i++)
+    {
+        if (arr[i] == vuoto)
+        {
+            return 0; // c'è ancora spazio
+        }
+    }
+
+    return -1;
+
+
+}
+
+void stampa(char *tabella)
 {
     for (int i = 0; i < 9; i++)
     {
-        cout << a[i] << " ";
-        if (i == 2 || i == 5 || i == 8)
+        cout << tabella[i] << " ";
+        if (i == 2 || i == 5 || i == 8) // alla fine di ogni riga (3x3) vai a capo
         {
-            std::cout << std::endl;
+            cout << endl;
         }
     }
+
     cout << endl;
     cout << endl;
     cout << endl;
@@ -50,7 +67,9 @@ void stampa(char *a) // stampo
 
 int main()
 {
+
     char vuoto = '_';
+
     // inizializzo la tabella
     char tabella[9];
     for (int i = 0; i < 9; i++)
@@ -59,21 +78,34 @@ int main()
     }
     stampa(tabella);
 
-    bool xIsNext = true; //gestisce il turno
-    while (true) // i turni del gioco
+    bool xIsNext = true; // gestisce il turno
+    while (true)         // i turni del gioco
     {
 
         int mossa;
 
-        cout << "Giocatore " << (xIsNext ? 'X' : 'O') << " inserisci la tua mossa (1-9) ";
-        cin >> mossa;
-        mossa--; //per capirci ;)
-
-        while (tabella[mossa] != vuoto || (!(0 <= mossa && mossa < 9))) // controllo 2 condizioni (valido e vuoto)
+        if (!xIsNext) // COMPUTER
         {
-            cout << "Non puoi inserire qui" << endl;
+            mossa = mossaPensata(tabella);
+
+            // while (tabella[mossa] != vuoto || (!(0 <= mossa && mossa < 9))) // controllo 2 condizioni (valido e vuoto)
+            // {
+            //     mossa = random() % 10;
+            // }
+        }
+        else // UTENTE
+        {
             cout << "Giocatore " << (xIsNext ? 'X' : 'O') << " inserisci la tua mossa (1-9) ";
             cin >> mossa;
+            mossa--; // per capirci ;)
+
+            while (tabella[mossa] != vuoto || (!(0 <= mossa && mossa < 9))) // controllo 2 condizioni (valido e vuoto)
+            {
+                cout << "Non puoi inserire qui" << endl;
+                cout << "Giocatore " << (xIsNext ? 'X' : 'O') << " inserisci la tua mossa (1-9) ";
+                cin >> mossa;
+                mossa--; // per capirci ;)
+            }
         }
 
         // se sono arrivato qui è solo perchè l'utente ha inserito un numero corretto
@@ -81,39 +113,29 @@ int main()
 
         stampa(tabella);
 
-        if(isWinner(tabella) == 1 )
+        if (isWinner(tabella) == 1)
         {
             cout << "Hai vinto " << (xIsNext ? 'X' : 'O') << endl;
             break;
         }
-        else if(isWinner(tabella) == -1)
+        else if (isWinner(tabella) == -1)
         {
             cout << "Pareggio" << endl;
-            //reset del gioco
-            for(int i=0;i<9;i++)
+            // reset del gioco
+            for (int i = 0; i < 9; i++)
             {
                 tabella[i] = vuoto;
             }
             xIsNext = true;
             stampa(tabella);
-
         }
-        else if(isWinner(tabella) == 0)
+        else if (isWinner(tabella) == 0)
         {
             xIsNext = !xIsNext; // cambio giocatore
         }
-        else{
-           // cout << "Errore in funzione isWinner" << endl;
+        else
+        {
+            cout << "Errore nella funzione isWinner" << endl;
         }
     }
-    int vincitore = isWinner(tabella);
-    if(vincitore == 1){
-        cout << "Giocatore X ha vinto" << endl;
-    }else if (vincitore == 2)
-    {
-        cout << "Giocatore 0 ha vinto" << endl;
-    }else{
-        cout << "pareggio" << endl;
-    }
-    return 0;
 }
