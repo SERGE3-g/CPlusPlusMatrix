@@ -52,6 +52,7 @@ int main()
     tab[3] = 'X';
     tab[6] = 'X';
     tab[8] = 'O';
+    tab[4] = 'X';
 
     stampa(tab);
 
